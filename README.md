@@ -45,18 +45,6 @@ kcd-boston-workshop/
 │       ├── scenario.md
 │       ├── solution.md
 │       └── killerkoda-link.md
-│
-├── killerkoda-demos/         # Demo files/scripts for KillerKoda
-│   ├── upgrade-master.sh
-│   ├── etcd-backup.sh
-│   ├── network-policy.yaml
-│   ├── taints.yaml
-│   └── rbac-demo.yaml
-│
-└── scripts/                  # Optional cluster setup/cleanup
-    ├── init-cluster.sh
-    ├── cleanup-cluster.sh
-    └── helper-functions.sh
 ```
 
 ---
