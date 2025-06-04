@@ -2,8 +2,7 @@
 
 Access the interactive playground below to perform a real Kubernetes upgrade using `kubeadm`.
 
-👉 [Launch Scenario on KillerKoda](https://killercoda.com/killer-shell-cka/scenario/cluster-upgrade) *(Replace with actual URL if customized)*
-
+👉 [Launch Scenario on KillerKoda](https://killercoda.com/killer-shell-cka/scenario/cluster-upgrade)
 > You will have access to a control plane and at least one worker node.
 
 **What You Can Try:**
