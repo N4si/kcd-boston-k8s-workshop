@@ -52,75 +52,17 @@ export ETCDCTL_API=3
 
 ---
 
-## Procedure
+## Your Tasks
 
-### ✅ Step 1: Backup etcd
+1. **Create an etcd backup** using the `etcdctl` tool with proper certificates
+2. **Verify the backup** was created successfully and contains valid data
+3. **Simulate a disaster** by deleting a critical Kubernetes resource
+4. **Restore from the backup** to recover the lost resource
+5. **Verify the restoration** was successful and the cluster is fully functional
 
-```bash
-etcdctl snapshot save snapshot \
-  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
-  --cert=/etc/kubernetes/pki/etcd/server.crt \
-  --key=/etc/kubernetes/pki/etcd/server.key
-```
+## Challenge
 
-### ✅ Step 2: Verify Snapshot
-
-```bash
-etcdctl snapshot status snapshot --write-out=table
-```
-
-You should now see a file named `snapshot` in your current directory.
-
----
-
-### ✅ Step 3: Simulate Data Loss
-
-Delete a critical Kubernetes resource to simulate disaster:
-
-```bash
-kubectl delete ds kube-proxy -n kube-system
-```
-
-Verify it's deleted:
-
-```bash
-kubectl get ds -A
-```
-
----
-
-### ✅ Step 4: Restore etcd from Snapshot
-
-```bash
-etcdctl snapshot restore snapshot --data-dir /var/lib/etcd-restore
-```
-
----
-
-### ✅ Step 5: Update etcd Pod Manifest
-
-Edit `/etc/kubernetes/manifests/etcd.yaml` and update the volume path:
-
-```yaml
-  - hostPath:
-      path: /var/lib/etcd-restore  # CHANGE THIS LINE
-      type: DirectoryOrCreate
-    name: etcd-data
-```
-
-> ⚠️ The Kubernetes API will be unavailable while etcd restarts. This may take 2–3 minutes.
-
----
-
-### ✅ Step 6: Verify Cluster State
-
-Once the API server is back:
-
-```bash
-kubectl get ds -A
-```
-
-You should see `kube-proxy` restored.
+The real challenge is understanding the etcd certificate paths, using the correct API version, and safely updating the etcd pod manifest without breaking the cluster permanently.
 
 ---
 
@@ -128,9 +70,25 @@ You should see `kube-proxy` restored.
 
 At the end of this task, you will:
 
-* Have successfully taken an etcd backup
-* Performed a restore from that backup
-* Recovered a deleted Kubernetes resource (kube-proxy)
+* Have successfully taken an etcd backup with proper authentication
+* Verified the backup integrity using `etcdctl snapshot status`
+* Performed a restore from that backup to a new data directory
+* Recovered a deleted Kubernetes resource (kube-proxy DaemonSet)
+* Understand the critical importance of etcd backups for disaster recovery
+
+## Verification Steps
+
+After completing the restore, verify success by:
+```bash
+# Check that kube-proxy DaemonSet is restored
+kubectl get ds -A | grep kube-proxy
+
+# Verify all nodes are ready
+kubectl get nodes
+
+# Check that all system pods are running
+kubectl get pods -n kube-system
+```
 
 This is a high-value operation for real-world disaster recovery!
 
