@@ -11,24 +11,34 @@ kind: NetworkPolicy
 metadata:
   name: my-app-network-policy
 spec:
+  # Apply this policy to pods with label app=my-app-deployment
   podSelector:
     matchLabels:
       app: my-app-deployment
+  # Define both ingress and egress rules
   policyTypes:
   - Ingress
   - Egress
   ingress:
   - from:
-    - podSelector: {}            # Allow from any pod
+    # Allow traffic from any pod in the cluster
+    - podSelector: {}
+    # Also allow traffic from pods specifically labeled app=trusted
     - podSelector:
         matchLabels:
-          app: trusted           # Allow from pods with label app=trusted
+          app: trusted
   egress:
   - to:
-    - podSelector: {}            # Allow egress to any pod
+    # Allow egress traffic only to other pods in the cluster
+    - podSelector: {}
 EOF
 
 # Verify NetworkPolicy is created
 kubectl get networkpolicy my-app-network-policy
 
-# Test by checking pods labels and connectivity accordingly
+# Describe the policy to see the details
+kubectl describe networkpolicy my-app-network-policy
+
+# Test connectivity (examples)
+# kubectl exec -it <test-pod> -- curl <my-app-service>
+# kubectl exec -it <trusted-pod> -- curl <my-app-service>

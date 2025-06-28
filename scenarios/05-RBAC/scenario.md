@@ -1,31 +1,49 @@
-# 🎯 Objective
+# Scenario: RBAC Basics
+
+## Objective
 
 In this scenario, you will practice the fundamentals of Kubernetes RBAC (Role-Based Access Control) by managing permissions for a user and a service account.
 
----
+## Background
 
-## 🧩 Scenario
+RBAC in Kubernetes allows you to control who can access what resources in your cluster. The key components are:
+- **Roles**: Define what actions can be performed on which resources
+- **RoleBindings**: Connect roles to users or service accounts
+- **ClusterRoles**: Like roles, but cluster-wide
+- **ClusterRoleBindings**: Connect cluster roles to users or service accounts
 
-You're working in a cluster where RBAC is enabled. You need to:
+## Tasks
 
-1. Create a Role named `sa-creator` in the **default** namespace that allows the creation of service accounts.
-2. Bind this role to a user named **Sandra** using a RoleBinding named `sa-creator-binding`.
-3. Verify that Sandra can create service accounts in the default namespace using `kubectl auth can-i`.
-4. Create a ServiceAccount named `dev` in the default namespace.
-5. Grant the built-in `view` ClusterRole to the `dev` service account via a RoleBinding.
-6. Verify that `dev` can list pods and services in the default namespace using `kubectl auth can-i`.
+You're working in a cluster where RBAC is enabled. Complete these tasks:
 
----
+1. **Create a Role** named `sa-creator` in the **default** namespace that allows the creation of service accounts
+2. **Create a RoleBinding** named `sa-creator-binding` to bind this role to a user named **Sandra**
+3. **Verify permissions** that Sandra can create service accounts in the default namespace using `kubectl auth can-i`
+4. **Create a ServiceAccount** named `dev` in the default namespace
+5. **Grant permissions** by binding the built-in `view` ClusterRole to the `dev` service account via a RoleBinding
+6. **Verify ServiceAccount permissions** that `dev` can list pods and services in the default namespace using `kubectl auth can-i`
 
-## 🔧 Setup Notes
+## Setup Notes
 
-- Assume you're working in the **default** namespace.
-- This cluster supports user impersonation with `--as=<username>` and service account impersonation with `--as=system:serviceaccount:<namespace>:<name>`.
+- Work in the **default** namespace throughout this scenario
+- This cluster supports user impersonation with `--as=<username>` and service account impersonation with `--as=system:serviceaccount:<namespace>:<name>`
 
----
+## Expected Outcome
 
-## 🧠 What You'll Learn
+By completing this scenario, you will:
+- Understand how to define roles and bind them to users or service accounts
+- Know how to verify permissions using `kubectl auth can-i`
+- Understand the difference between users and service accounts in Kubernetes RBAC
+- Have hands-on experience with both Role and ClusterRole bindings
 
-- How to define roles and bind them to users or service accounts.
-- How to verify permissions using `kubectl auth can-i`.
-- Difference between users and service accounts in Kubernetes RBAC.
+## Verification Steps
+
+After each step, verify your work:
+```bash
+# Verify Sandra's permissions
+kubectl auth can-i create serviceaccounts --as=Sandra --namespace=default
+
+# Verify dev service account permissions
+kubectl auth can-i list pods --as=system:serviceaccount:default:dev --namespace=default
+kubectl auth can-i list services --as=system:serviceaccount:default:dev --namespace=default
+```

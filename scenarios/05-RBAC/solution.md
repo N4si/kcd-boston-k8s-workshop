@@ -1,4 +1,4 @@
-# ✅ Solution:
+# Solution: RBAC Basics
 
 Follow the steps below to solve the scenario.
 
@@ -14,10 +14,10 @@ metadata:
   name: sa-creator
   namespace: default
 rules:
-- apiGroups: [""]
+- apiGroups: [""]  # Core API group for serviceaccounts
   resources: ["serviceaccounts"]
-  verbs: ["create"]
-````
+  verbs: ["create"]  # Only allow creation
+```
 
 Apply it:
 
@@ -37,11 +37,11 @@ metadata:
   name: sa-creator-binding
   namespace: default
 subjects:
-- kind: User
+- kind: User  # Binding to a user (not a service account)
   name: Sandra
   apiGroup: rbac.authorization.k8s.io
 roleRef:
-  kind: Role
+  kind: Role  # Reference to the Role we created
   name: sa-creator
   apiGroup: rbac.authorization.k8s.io
 ```
@@ -84,12 +84,12 @@ metadata:
   name: dev-view-binding
   namespace: default
 subjects:
-- kind: ServiceAccount
+- kind: ServiceAccount  # Binding to a service account
   name: dev
   namespace: default
 roleRef:
-  kind: ClusterRole
-  name: view
+  kind: ClusterRole  # Using built-in ClusterRole
+  name: view  # Built-in role that allows read-only access
   apiGroup: rbac.authorization.k8s.io
 ```
 
@@ -114,6 +114,11 @@ kubectl auth can-i list services --as=system:serviceaccount:default:dev --namesp
 
 ---
 
-🎉 Done! You've successfully created a user role, verified user and service account permissions, and applied RBAC bindings in Kubernetes.
+🎉 **Done!** You've successfully:
+- Created a custom Role for service account creation
+- Bound the role to a user using RoleBinding
+- Verified user permissions with `kubectl auth can-i`
+- Created a service account and granted it view permissions
+- Verified service account permissions
 
-```
+This demonstrates the core RBAC workflow in Kubernetes for both users and service accounts.

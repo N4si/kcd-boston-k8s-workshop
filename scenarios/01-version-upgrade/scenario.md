@@ -2,16 +2,17 @@
 
 ## Objective
 
-You are managing a Kubernetes cluster and need to upgrade it to a newer minor version. The task is to safely upgrade both the control plane and node components with minimal downtime.
+You are managing a Kubernetes cluster running version 1.31.x and need to upgrade it to version 1.32.x. The task is to safely upgrade both the control plane and node components with minimal downtime.
 
 Your job is to:
 
-* Check the current version of the cluster.
-* Review the available newer version.
-* Safely upgrade the kubeadm, kubelet, and kubectl tools.
-* Upgrade the control plane node.
-* Drain and upgrade a worker node.
-* Bring the node back into service.
+* Check the current version of the cluster
+* Review the available newer version (1.32.2)
+* Safely upgrade the kubeadm, kubelet, and kubectl tools
+* Upgrade the control plane node
+* Drain and upgrade a worker node
+* Bring the node back into service
+* Verify the upgrade was successful
 
 ---
 
@@ -38,9 +39,11 @@ Upgrading involves:
 
 ## Prerequisites
 
-* You must have root or sudo privileges on the nodes.
-* Backups of etcd and critical workloads are recommended.
-* Internet access to pull newer version binaries or images.
+* You must have root or sudo privileges on all cluster nodes
+* Backups of etcd and critical workloads are completed
+* Internet access to download newer version binaries and container images
+* All nodes are in a healthy state (`kubectl get nodes` shows all nodes as Ready)
+* No critical workloads are running that cannot tolerate brief downtime
 
 ---
 
@@ -48,9 +51,22 @@ Upgrading involves:
 
 By the end of this task:
 
-* The cluster will be upgraded to the desired minor version.
-* All nodes should be back online and schedulable.
-* You’ll understand the order of operations and documentation references for performing a real-world upgrade safely.
+* The cluster will be upgraded from 1.31.x to 1.32.2
+* All nodes should be back online and schedulable
+* All system pods (kube-system namespace) are running correctly
+* You can verify the upgrade with `kubectl version` and `kubectl get nodes`
+* You'll understand the order of operations and documentation references for performing a real-world upgrade safely
+
+## Verification Steps
+
+After completing the upgrade, verify success by running:
+```bash
+kubectl get nodes
+kubectl version --short
+kubectl get pods -n kube-system
+```
+
+All nodes should show the new version, and all system pods should be in Running state.y.
 
 ---
 

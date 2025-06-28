@@ -41,7 +41,7 @@ kcd-boston-workshop/
 │   │   ├── scenario.md
 │   │   ├── solution.md
 │   │   └── killerkoda-link.md
-│   └── 05-rbac-basics/
+│   └── 05-RBAC/
 │       ├── scenario.md
 │       ├── solution.md
 │       └── killerkoda-link.md
@@ -53,11 +53,11 @@ kcd-boston-workshop/
 
 | #  | Scenario                | Summary                                              |
 |----|-------------------------|------------------------------------------------------|
-| 01 | Kubernetes Version Upgrade | Upgrade a running cluster safely                    |
+| 01 | Kubernetes Version Upgrade | Upgrade a running cluster safely from 1.31.x to 1.32.x |
 | 02 | ETCD Backup             | Perform and restore a backup of the ETCD datastore  |
 | 03 | Network Policy          | Secure pod communication using Kubernetes policies  |
 | 04 | Taints & Tolerations    | Control pod placement using taints and tolerations |
-| 05 | RBAC Basics             | Create a role and bind it to a user                 |
+| 05 | RBAC Basics             | Create roles and bind them to users and service accounts |
 
 Each scenario includes:
 - A problem description (`scenario.md`)
@@ -79,7 +79,12 @@ Check `references/kubernetes-docs.md` for:
 ## ✅ Getting Started
 1. Clone this repo
 2. Browse to any scenario folder under `/scenarios`
-3. Try the steps in `scenario.md` using your terminal or KillerKoda
-4. Cross-check the official docs if you're stuck
+3. Read the `scenario.md` to understand the problem and requirements
+4. Try to solve it yourself using the official Kubernetes documentation
+5. Check your solution against `solution.md` when ready
+6. Use the KillerKoda links for hands-on practice in a real environment
+
+## 🧪 Testing Your Solutions
+Each scenario includes verification steps to confirm your solution works correctly. Always test your commands and YAML manifests before considering a scenario complete.
 
 Happy learning at KCD Boston! 🎉

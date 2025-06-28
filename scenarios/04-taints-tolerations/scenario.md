@@ -8,7 +8,13 @@ In this scenario, you will:
 - Successfully schedule the pod onto `node01`.
 
 ## Background
-Nodes can be tainted to repel pods that do not tolerate the taint. To allow a pod to schedule on a tainted node, the pod must have a matching toleration.
+Taints and tolerations work together to ensure pods are not scheduled onto inappropriate nodes:
+
+- **Taints** are applied to nodes to repel pods that should not be scheduled there
+- **Tolerations** are applied to pods to allow them to schedule on nodes with matching taints
+- Common use cases include dedicated nodes for specific workloads, nodes with special hardware, or nodes undergoing maintenance
+
+The taint has three components: key, value, and effect. The toleration must match all three exactly.
 
 ---
 
@@ -29,8 +35,25 @@ Nodes can be tainted to repel pods that do not tolerate the taint. To allow a po
 ---
 
 ## Expected Outcome
-- The pod successfully schedules on the tainted node `node01`.
-- The pod status is `Running`.
+- The pod successfully schedules on the tainted node `node01`
+- The pod status is `Running`
+- You understand how taints prevent scheduling and tolerations allow it
+
+## Verification Steps
+After applying the pod manifest:
+```bash
+# Verify the pod is scheduled on node01
+kubectl get pods -o wide
+
+# Check the pod is running
+kubectl get pods
+
+# Confirm the taint is still present on node01
+kubectl describe node node01 | grep Taints
+```
+
+## Additional Challenge
+Try creating a pod without the toleration and observe that it remains in `Pending` state, unable to schedule on the tainted node.
 
 ---
 
