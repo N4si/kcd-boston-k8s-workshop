@@ -122,3 +122,84 @@ kubectl auth can-i list services --as=system:serviceaccount:default:dev --namesp
 - Verified service account permissions
 
 This demonstrates the core RBAC workflow in Kubernetes for both users and service accounts.
+
+---
+
+## 📚 Understanding RBAC Components
+
+### RBAC Building Blocks
+
+1. **Role**: Defines permissions within a namespace
+2. **ClusterRole**: Defines permissions cluster-wide
+3. **RoleBinding**: Grants Role permissions to users/groups/service accounts in a namespace
+4. **ClusterRoleBinding**: Grants ClusterRole permissions cluster-wide
+
+### Permission Model
+
+RBAC uses a "deny by default" model:
+- No permissions are granted by default
+- All permissions must be explicitly granted
+- Permissions are additive (multiple roles can be bound to the same subject)
+
+### Built-in ClusterRoles
+
+Kubernetes provides several built-in ClusterRoles:
+- `cluster-admin`: Full cluster access
+- `admin`: Full namespace access
+- `edit`: Read/write access to most resources in a namespace
+- `view`: Read-only access to most resources in a namespace
+
+## 📖 Official Documentation References
+
+- [RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) - Complete RBAC guide
+- [Using RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#command-line-utilities) - Practical examples
+- [Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) - Service account management
+- [Authentication Overview](https://kubernetes.io/docs/reference/access-authn-authz/authentication/) - Authentication methods
+- [Authorization Overview](https://kubernetes.io/docs/reference/access-authn-authz/authorization/) - Authorization modes
+- [kubectl auth can-i](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#auth) - Permission testing
+
+## ⚠️ Troubleshooting RBAC
+
+### Permission Denied Errors?
+
+1. **Check current permissions**:
+   ```bash
+   kubectl auth can-i --list --as=Sandra
+   kubectl auth can-i --list --as=system:serviceaccount:default:dev
+   ```
+
+2. **Verify role bindings**:
+   ```bash
+   kubectl get rolebindings -o wide
+   kubectl describe rolebinding sa-creator-binding
+   ```
+
+3. **Check role definitions**:
+   ```bash
+   kubectl describe role sa-creator
+   kubectl describe clusterrole view
+   ```
+
+### Common Issues
+
+- **Wrong namespace**: RoleBindings only work in their namespace
+- **Typos**: Subject names must match exactly
+- **API groups**: Ensure correct apiGroups in role rules
+- **Verbs**: Check that the required verbs are included
+
+### Useful Debugging Commands
+
+```bash
+# List all roles and bindings
+kubectl get roles,rolebindings,clusterroles,clusterrolebindings
+
+# Check what a user can do
+kubectl auth can-i --list --as=Sandra --namespace=default
+
+# Test specific permissions
+kubectl auth can-i create pods --as=Sandra --namespace=default
+kubectl auth can-i get secrets --as=system:serviceaccount:default:dev
+
+# View effective permissions
+kubectl describe rolebinding --all-namespaces
+```
